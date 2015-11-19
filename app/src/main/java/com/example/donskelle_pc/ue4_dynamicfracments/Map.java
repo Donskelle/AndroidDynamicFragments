@@ -42,8 +42,7 @@ public class Map extends Fragment {
         MapController controllerMap = (MapController) map.getController();
         controllerMap.setZoom(15);
 
-        LocationsModel locationsClass = ((MainActivity) getActivity()).getLocationsClass();
-        Location currentLocation = locationsClass.getCurrentLocation();
+        Location currentLocation = (((MainActivity) getActivity()).getLocationsClass()).getCurrentLocation();
 
         myGeoPoint = new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());
         controllerMap.setCenter(myGeoPoint);

@@ -2,6 +2,7 @@ package com.example.donskelle_pc.ue4_dynamicfracments;
 
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,6 +15,8 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "fhfl-dynfracment";
+
+    private static final String SHARED_PREFERENCES_TAG = "DynamicFragment";
 
     private LocationsModel locationClass;
 
@@ -39,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         courseFrag = new Course();
         speedFrag = new Speed();
 
-        locationClass = new LocationsModel();
+        SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES_TAG, 0);
+        locationClass = new LocationsModel(sp);
 
         getFragmentManager().beginTransaction().add(R.id.fragment, mapFrag).commit();
 
@@ -48,6 +52,15 @@ public class MainActivity extends AppCompatActivity {
         createLocListener();
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "MainActivity: onPause();");
+
+        SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES_TAG, 0);
+        locationClass.safe(sp);
     }
 
     @Override
@@ -120,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public LocationsModel getLocationsClass() {
+        Log.d(TAG, "MainActivity: getLocationsClass();");
         return locationClass;
     }
 }
